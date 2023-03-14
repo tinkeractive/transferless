@@ -3,6 +3,6 @@ transferless
 
 haiku
 ----------------------------------------
-serverless managed
-file transfer with rclone in
-AWS
+serverless transfer
+using rclone in lambda ...
+any cloud storage
