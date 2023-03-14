@@ -3,6 +3,6 @@ transferless
 
 haiku
 ----------------------------------------
-serverless transfer
-using rclone in lambda ...
-any cloud storage
+serverless transfer ...
+rclone running parallel ...
+any cloud storage!
