@@ -3,6 +3,6 @@ transferless
 
 haiku
 ----------------------------------------
-serverless transfer ...
-runs rclone in parallel ...
-any cloud storage!
+serverless transfer -
+running rclone for read/write
+between any clouds
