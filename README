@@ -6,3 +6,7 @@ haiku
 serverless transfer -
 running rclone for read/write
 between any clouds
+
+TODO
+----------------------------------------
+documentation
