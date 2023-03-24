@@ -6,9 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/tinkeractive/transferless/configuration"
-	"github.com/tinkeractive/transferless/enqueuer"
-	"github.com/tinkeractive/transferless/scheduler"
+	"github.com/tinkeractive/transferless/pkg/configuration"
+	"github.com/tinkeractive/transferless/pkg/enqueuer"
+	"github.com/tinkeractive/transferless/pkg/scheduler"
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/rclone/rclone/backend/s3"
 )

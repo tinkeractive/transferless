@@ -1,8 +1,8 @@
 package enqueuer
 
 import (
-	"github.com/tinkeractive/transferless/job"
-	"github.com/tinkeractive/transferless/transfer"
+	"github.com/tinkeractive/transferless/pkg/job"
+	"github.com/tinkeractive/transferless/pkg/transfer"
 )
 
 type Enqueuer interface {

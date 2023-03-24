@@ -3,8 +3,8 @@ package enqueuer
 import (
 	"encoding/json"
 
-	"github.com/tinkeractive/transferless/job"
-	"github.com/tinkeractive/transferless/transfer"
+	"github.com/tinkeractive/transferless/pkg/job"
+	"github.com/tinkeractive/transferless/pkg/transfer"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"

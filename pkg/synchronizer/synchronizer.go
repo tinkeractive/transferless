@@ -10,9 +10,9 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/tinkeractive/transferless/file"
-	"github.com/tinkeractive/transferless/job"
-	"github.com/tinkeractive/transferless/transfer"
+	"github.com/tinkeractive/transferless/pkg/file"
+	"github.com/tinkeractive/transferless/pkg/job"
+	"github.com/tinkeractive/transferless/pkg/transfer"
 	"github.com/rclone/rclone/cmd"
 	"github.com/rclone/rclone/fs"
 	"github.com/rclone/rclone/fs/filter"

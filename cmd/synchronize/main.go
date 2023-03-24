@@ -6,9 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/tinkeractive/transferless/configuration"
-	"github.com/tinkeractive/transferless/synchronizer"
-	"github.com/tinkeractive/transferless/transfer"
+	"github.com/tinkeractive/transferless/pkg/configuration"
+	"github.com/tinkeractive/transferless/pkg/synchronizer"
+	"github.com/tinkeractive/transferless/pkg/transfer"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"

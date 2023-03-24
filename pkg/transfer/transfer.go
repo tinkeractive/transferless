@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/tinkeractive/transferless/file"
-	"github.com/tinkeractive/transferless/job"
+	"github.com/tinkeractive/transferless/pkg/file"
+	"github.com/tinkeractive/transferless/pkg/job"
 )
 
 type Transfer struct {
