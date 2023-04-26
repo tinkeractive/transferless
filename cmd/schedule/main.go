@@ -27,8 +27,18 @@ func HandleRequest() {
 	bucket := os.Getenv("TRANSFERLESS_JOB_CONFIG_BUCKET")
 	objPath := os.Getenv("TRANSFERLESS_JOB_CONFIG_PATH")
 	jobQueue := os.Getenv("TRANSFERLESS_JOB_QUEUE")
-	configProvider := configuration.AWS{"Type", "Transferless"}
-	configString, err := configProvider.GetConfig()
+	remoteConfigService := os.Getenv("TRANSFERLESS_REMOTE_CONFIG_SERVICE")
+	var configProvider interface{}
+	switch remoteConfigService {
+	case "AWSSecretsManager":
+		configProvider = configuration.AWSSecretsManager{"Type", "Transferless"}
+	case "AWSSystemsManager":
+		configProvider = configuration.AWSSystemsManager{"Type", "Transferless"}
+	default:
+		log.Println("no credential service specified")
+		return
+	}
+	configString, err := configProvider.(configuration.Provider).GetConfig()
 	if err != nil {
 		log.Fatal(err)
 	}

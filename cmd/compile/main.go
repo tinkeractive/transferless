@@ -80,8 +80,18 @@ func CompileJob(inputJob job.Job) {
 	dataRootTmp := os.Getenv("TRANSFERLESS_DATA_ROOT")
 	dataRoot := fmt.Sprintf("%s/%s", bucket, dataRootTmp)
 	transferQueue := os.Getenv("TRANSFERLESS_TRANSFER_QUEUE")
-	configProvider := configuration.AWS{"Type", "Transferless"}
-	configString, err := configProvider.GetConfig()
+	remoteConfigService := os.Getenv("TRANSFERLESS_REMOTE_CONFIG_SERVICE")
+	var configProvider interface{}
+	switch remoteConfigService {
+	case "AWSSecretsManager":
+		configProvider = configuration.AWSSecretsManager{"Type", "Transferless"}
+	case "AWSSystemsManager":
+		configProvider = configuration.AWSSystemsManager{"Type", "Transferless"}
+	default:
+		log.Println("no credential service specified")
+		return
+	}
+	configString, err := configProvider.(configuration.Provider).GetConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
