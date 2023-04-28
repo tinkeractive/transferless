@@ -3,22 +3,21 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/sqs"
+	_ "github.com/rclone/rclone/backend/s3"
+	_ "github.com/rclone/rclone/backend/sftp"
 	"github.com/tinkeractive/transferless/pkg/compiler"
 	"github.com/tinkeractive/transferless/pkg/configuration"
 	"github.com/tinkeractive/transferless/pkg/enqueuer"
 	"github.com/tinkeractive/transferless/pkg/job"
 	"github.com/tinkeractive/transferless/pkg/transfer"
-	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/sqs"
-	_ "github.com/rclone/rclone/backend/s3"
-	_ "github.com/rclone/rclone/backend/sftp"
 )
 
 // NOTE the on-disk config requirement is unavoidable without altering the rclone source code
@@ -27,8 +26,8 @@ import (
 // NOTE rclone obscures passwords before saving in the config file and users must do the same
 // NOTE the aws config provider assumes secrets manager usage
 
-func main(){
-	if ("" == os.Getenv("AWS_LAMBDA_FUNCTION_NAME")) {
+func main() {
+	if "" == os.Getenv("AWS_LAMBDA_FUNCTION_NAME") {
 		region := os.Getenv("AWS_REGION")
 		// NOTE this env var does not exist in deployment config
 		jobQueue := os.Getenv("TRANSFERLESS_JOB_QUEUE")
@@ -43,7 +42,7 @@ func main(){
 			log.Fatal(err)
 		}
 		receiveMessageInput := &sqs.ReceiveMessageInput{
-			QueueUrl: aws.String(*getQueueURLOutput.QueueUrl),
+			QueueUrl:            aws.String(*getQueueURLOutput.QueueUrl),
 			MaxNumberOfMessages: aws.Int64(int64(1)),
 		}
 		receiveMessageOutput, err := sqsClient.ReceiveMessage(receiveMessageInput)
@@ -57,11 +56,11 @@ func main(){
 		}
 		CompileJob(inputJob)
 	} else {
-		lambda.Start(HandleRequest)		
+		lambda.Start(HandleRequest)
 	}
 }
 
-func HandleRequest(lambdaEvent events.SQSEvent){
+func HandleRequest(lambdaEvent events.SQSEvent) {
 	for _, event := range lambdaEvent.Records {
 		var inputJob job.Job
 		err := json.Unmarshal([]byte(event.Body), &inputJob)
@@ -76,17 +75,15 @@ func CompileJob(inputJob job.Job) {
 	log.Println("job:", inputJob)
 	region := os.Getenv("AWS_REGION")
 	remote := os.Getenv("TRANSFERLESS_DATA_REMOTE")
-	bucket := os.Getenv("TRANSFERLESS_DATA_BUCKET")
-	dataRootTmp := os.Getenv("TRANSFERLESS_DATA_ROOT")
-	dataRoot := fmt.Sprintf("%s/%s", bucket, dataRootTmp)
+	dataRoot := os.Getenv("TRANSFERLESS_DATA_ROOT")
 	transferQueue := os.Getenv("TRANSFERLESS_TRANSFER_QUEUE")
 	remoteConfigService := os.Getenv("TRANSFERLESS_REMOTE_CONFIG_SERVICE")
 	var configProvider interface{}
 	switch remoteConfigService {
 	case "AWSSecretsManager":
-		configProvider = configuration.AWSSecretsManager{"Type", "Transferless"}
+		configProvider = &configuration.AWSSecretsManager{"Type", "Transferless"}
 	case "AWSSystemsManager":
-		configProvider = configuration.AWSSystemsManager{"Type", "Transferless"}
+		configProvider = &configuration.AWSSystemsManager{"Type", "Transferless"}
 	default:
 		log.Println("no credential service specified")
 		return

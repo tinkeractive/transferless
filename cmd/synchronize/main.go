@@ -6,20 +6,20 @@ import (
 	"log"
 	"os"
 
-	"github.com/tinkeractive/transferless/pkg/configuration"
-	"github.com/tinkeractive/transferless/pkg/synchronizer"
-	"github.com/tinkeractive/transferless/pkg/transfer"
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go/service/sqs"
 	_ "github.com/rclone/rclone/backend/s3"
 	_ "github.com/rclone/rclone/backend/sftp"
+	"github.com/tinkeractive/transferless/pkg/configuration"
+	"github.com/tinkeractive/transferless/pkg/synchronizer"
+	"github.com/tinkeractive/transferless/pkg/transfer"
 )
 
-func main(){
-	if ("" == os.Getenv("AWS_LAMBDA_FUNCTION_NAME")) {
+func main() {
+	if "" == os.Getenv("AWS_LAMBDA_FUNCTION_NAME") {
 		region := os.Getenv("AWS_REGION")
 		// NOTE does not exist in deployed config
 		transferQueue := os.Getenv("TRANSFERLESS_TRANSFER_QUEUE")
@@ -34,7 +34,7 @@ func main(){
 			log.Fatal(err)
 		}
 		receiveMessageInput := &sqs.ReceiveMessageInput{
-			QueueUrl: aws.String(*getQueueURLOutput.QueueUrl),
+			QueueUrl:            aws.String(*getQueueURLOutput.QueueUrl),
 			MaxNumberOfMessages: aws.Int64(int64(1)),
 		}
 		receiveMessageOutput, err := sqsClient.ReceiveMessage(receiveMessageInput)
@@ -52,7 +52,7 @@ func main(){
 	}
 }
 
-func HandleRequest(lambdaEvent events.SQSEvent){
+func HandleRequest(lambdaEvent events.SQSEvent) {
 	for _, event := range lambdaEvent.Records {
 		var transferObj transfer.Transfer
 		err := json.Unmarshal([]byte(event.Body), &transferObj)
@@ -69,9 +69,9 @@ func SyncTransfer(transferObj transfer.Transfer) {
 	var configProvider interface{}
 	switch remoteConfigService {
 	case "AWSSecretsManager":
-		configProvider = configuration.AWSSecretsManager{"Type", "Transferless"}
+		configProvider = &configuration.AWSSecretsManager{"Type", "Transferless"}
 	case "AWSSystemsManager":
-		configProvider = configuration.AWSSystemsManager{"Type", "Transferless"}
+		configProvider = &configuration.AWSSystemsManager{"Type", "Transferless"}
 	default:
 		log.Println("no credential service specified")
 		return
