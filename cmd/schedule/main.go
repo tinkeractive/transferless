@@ -41,7 +41,6 @@ func HandleRequest() {
 		log.Fatal(err)
 	}
 	log.Println("loading config")
-	log.Println(configString)
 	err = configuration.LoadConfig(context.Background(), configString)
 	if err != nil {
 		log.Fatal(err)
