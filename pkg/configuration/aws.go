@@ -93,13 +93,7 @@ func (a *AWSSystemsManager) GetConfig() (string, error) {
 	// create DescribeParametersInput with filter and DescribeParameters
 	parameterStringFilter := []*ssm.ParameterStringFilter{
 		{
-			Key:    aws.String("tag-key"),
-			Option: aws.String("Equals"),
-			Values: aws.StringSlice([]string{a.TagKey}),
-		},
-		{
-			Key:    aws.String("tag-value"),
-			Option: aws.String("Equals"),
+			Key:    aws.String("tag:" + a.TagKey),
 			Values: aws.StringSlice([]string{a.TagValue}),
 		},
 	}

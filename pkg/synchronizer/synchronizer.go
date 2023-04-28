@@ -10,13 +10,13 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/tinkeractive/transferless/pkg/file"
-	"github.com/tinkeractive/transferless/pkg/job"
-	"github.com/tinkeractive/transferless/pkg/transfer"
 	"github.com/rclone/rclone/cmd"
 	"github.com/rclone/rclone/fs"
 	"github.com/rclone/rclone/fs/filter"
 	"github.com/rclone/rclone/fs/operations"
+	"github.com/tinkeractive/transferless/pkg/file"
+	"github.com/tinkeractive/transferless/pkg/job"
+	"github.com/tinkeractive/transferless/pkg/transfer"
 )
 
 func Sync(transferObj transfer.Transfer) error {

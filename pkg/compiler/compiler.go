@@ -11,12 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tinkeractive/transferless/pkg/file"
-	"github.com/tinkeractive/transferless/pkg/job"
 	"github.com/rclone/rclone/cmd"
 	"github.com/rclone/rclone/fs"
 	"github.com/rclone/rclone/fs/filter"
 	"github.com/rclone/rclone/fs/operations"
+	"github.com/tinkeractive/transferless/pkg/file"
+	"github.com/tinkeractive/transferless/pkg/job"
 )
 
 func IsTransferCandidate(modTime, minModTime int64) bool {
