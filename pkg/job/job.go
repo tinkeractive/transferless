@@ -26,6 +26,16 @@ type Job struct {
 	Targets []JobTarget
 }
 
+// NOTE ini sections cannot have forward slash in the name
+func (j *Job) Clean() error {
+	var err error
+	j.Source.Remote = strings.ReplaceAll(j.Source.Remote, "/", "")
+	for i, target := range j.Targets {
+		j.Targets[i].Remote = strings.ReplaceAll(target.Remote, "/", "")
+	}
+	return err
+}
+
 func (j Job) String() string {
 	b, err := json.MarshalIndent(j, " ", "")
 	if err != nil {

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -74,7 +75,8 @@ func HandleRequest(lambdaEvent events.SQSEvent) {
 func CompileJob(inputJob job.Job) {
 	log.Println("job:", inputJob)
 	region := os.Getenv("AWS_REGION")
-	remote := os.Getenv("TRANSFERLESS_DATA_REMOTE")
+	rawRemote := os.Getenv("TRANSFERLESS_DATA_REMOTE")
+	remote := strings.ReplaceAll(rawRemote, "/", "")
 	dataRoot := os.Getenv("TRANSFERLESS_DATA_ROOT")
 	transferQueue := os.Getenv("TRANSFERLESS_TRANSFER_QUEUE")
 	remoteConfigService := os.Getenv("TRANSFERLESS_REMOTE_CONFIG_SERVICE")

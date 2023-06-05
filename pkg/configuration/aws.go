@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -57,7 +58,8 @@ func (a *AWSSecretsManager) GetConfig() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		section, err := iniFile.NewSection(*secretListEntry.Name)
+		sectionName := strings.ReplaceAll(*secretListEntry.Name, "/", "")
+		section, err := iniFile.NewSection(sectionName)
 		if err != nil {
 			return "", err
 		}

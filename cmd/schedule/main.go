@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	_ "github.com/rclone/rclone/backend/s3"
@@ -22,7 +23,8 @@ func main() {
 
 func HandleRequest() {
 	region := os.Getenv("AWS_REGION")
-	remote := os.Getenv("TRANSFERLESS_JOB_CONFIG_REMOTE")
+	rawRemote := os.Getenv("TRANSFERLESS_JOB_CONFIG_REMOTE")
+	remote := strings.ReplaceAll(rawRemote, "/", "")
 	objPath := os.Getenv("TRANSFERLESS_JOB_CONFIG_PATH")
 	jobQueue := os.Getenv("TRANSFERLESS_JOB_QUEUE")
 	remoteConfigService := os.Getenv("TRANSFERLESS_REMOTE_CONFIG_SERVICE")
@@ -56,6 +58,11 @@ func HandleRequest() {
 		log.Fatal(err)
 	}
 	for _, job := range jobs {
+		log.Println("cleaning:", job)
+		err = job.Clean()
+		if err != nil {
+			log.Println(err)
+		}
 		log.Println("enqueueing:", job)
 		err = awsEnqueuer.EnqueueJob(job)
 		if err != nil {
